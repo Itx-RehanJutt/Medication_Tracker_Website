@@ -1,22 +1,18 @@
 import './index.css';
-import { createRoot } from 'react-dom/client';
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import App from './App.jsx';
-import { createBrowserRouter, RouterProvider } from 'react-router';
 import NotFound from './components/NotFound.jsx';
+import LoginPage from './pages/LoginPage.jsx';
+import RegisterPage from './pages/RegisterPage.jsx';
 
 const router = createBrowserRouter([
-  {
-    path: '/',
-    element: <App />,
-    errorElement: <NotFound />,
-    children: [
-      {
-        path: '/',
-        element: <NotFound />,
-      },
-    ],
-  },
+  { path: "/", element: <App />, errorElement: <NotFound /> },
+  { path: "/login", element: <LoginPage /> },
+  { path: "/register", element: <RegisterPage /> },
 ]);
 
-const root = createRoot(document.querySelector('#root'));
-root.render(<RouterProvider router={router} />);
+ReactDOM.createRoot(document.getElementById('root')).render(
+  <RouterProvider router={router} />
+);
