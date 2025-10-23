@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import MedicationForm from "../components/MedicationForm";
-import { CircleAlert, Pill, Clock, Check, Square } from "lucide-react";
+import { Bell, ClockAlert, Pill, Clock, Check, Square } from "lucide-react"; // ✅ updated icons
 
 const Home = () => {
   const [medications, setMedications] = useState([]);
@@ -11,7 +11,6 @@ const Home = () => {
     setShowForm(false);
   };
 
-  // ✅ Convert 24-hour time to 12-hour
   const formatTime = (time) => {
     if (!time) return "";
     const [hour, minute] = time.split(":").map(Number);
@@ -20,7 +19,6 @@ const Home = () => {
     return `${formattedHour}:${minute.toString().padStart(2, "0")} ${ampm}`;
   };
 
-  // ✅ Check if medication time is passed
   const isTimePassed = (time) => {
     if (!time) return false;
     const [hour, minute] = time.split(":").map(Number);
@@ -30,7 +28,6 @@ const Home = () => {
     return now >= medTime;
   };
 
-  // ✅ Remaining time (for upcoming reminders)
   const getRemainingTime = (reminderTime) => {
     if (!reminderTime) return null;
     const [hour, minute] = reminderTime.split(":").map(Number);
@@ -50,7 +47,6 @@ const Home = () => {
     else return `Due in ${minutes} min`;
   };
 
-  // ✅ Determine urgency color for reminders
   const getCardStyle = (reminderTime) => {
     const [hour, minute] = reminderTime.split(":").map(Number);
     const now = new Date();
@@ -77,7 +73,6 @@ const Home = () => {
     return diffHours <= 1 && diffHours > 0;
   };
 
-  // ✅ Auto-refresh every minute
   useEffect(() => {
     const timer = setInterval(() => {
       setMedications((prev) => [...prev]);
@@ -85,7 +80,6 @@ const Home = () => {
     return () => clearInterval(timer);
   }, []);
 
-  // ✅ Count taken medications
   const takenCount = medications.filter((m) =>
     isTimePassed(m.reminderTime)
   ).length;
@@ -93,21 +87,20 @@ const Home = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Medication Form */}
       {showForm && (
         <div className="max-w-3xl mx-auto px-4 py-4">
           <MedicationForm
             onAddMedication={handleAddMedication}
-            onCancel={() => setShowForm(false)} // ✅ closes the form when Cancel clicked
+            onCancel={() => setShowForm(false)}
           />
         </div>
       )}
 
       {/* ✅ Top Bar */}
-      <div className=" max-w-7xl mx-auto flex flex-wrap items-center justify-center sm:justify-start px-4 sm:px-8 py-4">
+      <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-start px-4 sm:px-8 py-4">
         <button
           onClick={() => setShowForm(!showForm)}
-          className="w-full sm:w-auto text-center bg-blue-600 hover:bg-blue-700 text-white font-semibold px-5 py-2 rounded-lg shadow-md transition"
+          className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-5 py-2 rounded-lg shadow-md transition"
         >
           + Add New Medication
         </button>
@@ -115,14 +108,13 @@ const Home = () => {
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="grid lg:grid-cols-3 gap-6">
-          {/* ✅ Left Section: Today's Medications */}
+          {/* ✅ Left Section */}
           <div className="lg:col-span-2 space-y-6">
             <div className="bg-white rounded-lg shadow-sm p-6">
-              <div className="flex flex-col justify-between items-left mb-2">
+              <div className="flex flex-col items-left mb-2">
                 <h2 className="text-lg font-semibold text-gray-900">
                   Today's Medications
                 </h2>
-                {/* ✅ Taken/Total status */}
                 {totalCount > 0 && (
                   <p className="text-sm font-semibold text-gray-600">
                     {takenCount} of {totalCount} taken
@@ -175,7 +167,7 @@ const Home = () => {
                               Taken
                             </span>
                           ) : (
-                            <span className="px-3 py-1 text-xs font-semibold bg-blue-100 text-blue-700 rounded-full">
+                            <span className="px-3 py-1 text-xs font-semibold bg-blue-100 text-blue-600 rounded-full">
                               Pending
                             </span>
                           )}
@@ -192,7 +184,7 @@ const Home = () => {
 
           {/* ✅ Right Section: Upcoming Reminders */}
           <div className="lg:col-span-1">
-            <div className="bg-white rounded-lg shadow-sm sticky top-24">
+            <div className="bg-white rounded-lg shadow-sm sticky top-24 p-4">
               <h2 className="text-gray-900 font-semibold mb-4">
                 Upcoming Reminders
               </h2>
@@ -210,7 +202,12 @@ const Home = () => {
                       >
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-2 font-medium">
-                            <CircleAlert className="w-4 h-4 text-blue-700" />
+                            {/* ✅ Bell for >1 hr, ClockAlert for ≤1 hr */}
+                            {urgent ? (
+                              <ClockAlert className="w-4 h-4 text-red-700" />
+                            ) : (
+                              <Bell className="w-4 h-4 text-blue-700" />
+                            )}
                             {reminder.name}
                           </div>
                           <span
