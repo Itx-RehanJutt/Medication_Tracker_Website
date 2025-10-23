@@ -7,11 +7,14 @@ import NotFound from "./components/NotFound.jsx";
 import LoginPage from "./pages/LoginPage.jsx";
 import RegisterPage from "./pages/RegisterPage.jsx";
 import Setting from "./pages/Setting.jsx";
+import Home from './pages/Home.jsx';
+
 
 const router = createBrowserRouter([
-  { path: "/", element: <App />, errorElement: <NotFound /> },
+  { path: "/*", element: <App />, errorElement: <NotFound /> },
   { path: "/login", element: <LoginPage /> },
   { path: "/register", element: <RegisterPage /> },
+  { path: "/", element: <Home /> },
   { path: "/setting", element: <Setting /> },
 ]);
 
