@@ -1,38 +1,35 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import icon from "../assets/icon.png";
-import { useTheme } from "../components/ThemeContext"; 
+import { useTheme } from "../components/ThemeContext";
 
 function LoginPage() {
   const navigate = useNavigate();
-  const { theme } = useTheme(); 
+  const { theme } = useTheme();
   const [credentials, setCredentials] = useState({ email: "", password: "" });
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     setLoading(true);
-    try {
-      const response = await fetch("http://localhost:5000/api/users/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(credentials),
-      });
 
-      const data = await response.json();
-      if (response.ok) {
-        localStorage.setItem("token", data.token);
+    setTimeout(() => {
+      const savedUser = JSON.parse(localStorage.getItem("user"));
+
+      if (
+        savedUser &&
+        savedUser.email === credentials.email &&
+        savedUser.password === credentials.password
+      ) {
+        localStorage.setItem("token", "dummy_token");
         alert("Login successful!");
         navigate("/");
       } else {
-        alert(data.message);
+        alert("Invalid email or password!");
       }
-    } catch (error) {
-      console.error("Error:", error);
-      alert("Something went wrong. Please try again.");
-    } finally {
+
       setLoading(false);
-    }
+    }, 1000);
   };
 
   // Theme-based styling
