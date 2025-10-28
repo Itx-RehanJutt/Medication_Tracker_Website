@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import icon from "../assets/icon.png";
-import { useTheme } from "../components/ThemeContext"; 
+import { useTheme } from "../components/ThemeContext";
 
 function RegisterPage() {
   const navigate = useNavigate();
-  const { theme } = useTheme(); 
+  const { theme } = useTheme();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -14,38 +14,29 @@ function RegisterPage() {
   });
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
+
     if (formData.password !== formData.confirmPassword) {
       alert("Passwords do not match!");
       return;
     }
 
     setLoading(true);
-    try {
-      const response = await fetch("http://localhost:5000/api/users/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
+
+    setTimeout(() => {
+      localStorage.setItem(
+        "user",
+        JSON.stringify({
           name: formData.name,
           email: formData.email,
           password: formData.password,
-        }),
-      });
-
-      const data = await response.json();
-      if (response.ok) {
-        alert("Registration successful!");
-        navigate("/login");
-      } else {
-        alert(data.message);
-      }
-    } catch (error) {
-      console.error("Error:", error);
-      alert("Something went wrong. Please try again.");
-    } finally {
+        })
+      );
+      alert("Registration successful!");
+      navigate("/login");
       setLoading(false);
-    }
+    }, 1000);
   };
 
   // Theme-based styling
